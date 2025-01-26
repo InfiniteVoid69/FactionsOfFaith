@@ -7,7 +7,7 @@ public class ModCreativeModeTab {
     public static final CreativeModeTab FACTIONSOFFAITHTAB = new CreativeModeTab("factionsoffaithtab") {
         @Override
         public ItemStack makeIcon() {
-            return new ItemStack(ModItems.BookOfFaith.get());
+            return new ItemStack(ModItems.WrittenBookOfFaith.get());
         }
     };
 }
