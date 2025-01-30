@@ -6,7 +6,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.npc.Villager;
 
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -25,13 +24,10 @@ public class FaithManager {
         PLAYER_FAITHS.put(player, name);
         return true;
     }
-
     public static boolean disbandFaith(ServerPlayer player, String name) {
         if (!FAITHS.containsKey(name)) return false;
-
         FaithData faith = FAITHS.get(name);
         if (!faith.getCreator().equals(player)) return false;
-
         FAITHS.remove(name);
         PLAYER_FAITHS.entrySet().removeIf(entry -> entry.getValue().equals(name));
         VILLAGER_FAITHS.entrySet().removeIf(entry -> entry.getValue().equals(name));
@@ -47,7 +43,6 @@ public class FaithManager {
     public static String getFaith(ServerPlayer player) {
         return PLAYER_FAITHS.getOrDefault(player, "none");
     }
-
     public static String getFaith(Villager villager) {
         return VILLAGER_FAITHS.getOrDefault(villager, "none");
     }
@@ -55,7 +50,6 @@ public class FaithManager {
     public static boolean joinFaith(ServerPlayer player, String faith) {
         if (!FAITHS.containsKey(faith)) return false;
         if (PLAYER_FAITHS.containsKey(player)) return false;
-
         PLAYER_FAITHS.put(player, faith);
         return true;
     }
@@ -64,6 +58,10 @@ public class FaithManager {
         if (!FAITHS.containsKey(faith)) {
             player.sendSystemMessage(Component.literal("That faith does not exist!").withStyle(ChatFormatting.DARK_RED));
             return false;
+        } else if (getFaith(villager).equals("none")) {
+            player.sendSystemMessage(Component.literal("The villager has converted to " + faith + "!").withStyle(ChatFormatting.GREEN));
+            VILLAGER_FAITHS.put(villager, faith);
+            return true;
         }
 
         String currentFaith = getFaith(villager);
@@ -89,7 +87,5 @@ public class FaithManager {
             player.sendSystemMessage(Component.literal("The villager resisted conversion! (" + attempts + "/3)").withStyle(ChatFormatting.YELLOW));
             return false;
         }
-
-
     }
 }
