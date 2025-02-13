@@ -5,6 +5,7 @@ import com.bigdad.factionsoffaith.data.FaithManager;
 import com.bigdad.factionsoffaith.item.ModItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -40,18 +41,19 @@ public class FaithBookEventHandler {
         Entity target = event.getTarget();
         ItemStack heldItem = player.getMainHandItem();
         if (heldItem.getItem() != ModItems.WrittenBookOfFaith.get()) return;
-        String faith = heldItem.getHoverName().getString();
+        event.setCanceled(true);
 
+        String faith = heldItem.getHoverName().getString();
         if (FaithManager.getFaith(serverPlayer).equals("none")) {
             player.sendSystemMessage(Component.literal(player.getName().getString() + " you must be part of a faith to convert others!").withStyle(ChatFormatting.RED));
             return;
         }
 
         if (target instanceof ServerPlayer targetPlayer) {
-                player.sendSystemMessage(Component.literal("Debug: Player selected").withStyle(ChatFormatting.YELLOW));
+            player.sendSystemMessage(Component.literal("Debug: Player selected").withStyle(ChatFormatting.YELLOW));
             handlePlayerInteraction(faith, serverPlayer, serverPlayer);
         } else if (target instanceof Villager villager) {
-                player.sendSystemMessage(Component.literal("Debug: " + serverPlayer.getName().getString() + " | Villager selected " + villager).withStyle(ChatFormatting.YELLOW));
+            player.sendSystemMessage(Component.literal("Debug: " + serverPlayer.getName().getString() + " | Villager selected " + villager).withStyle(ChatFormatting.YELLOW));
             FaithManager.convertVillager(villager, faith, serverPlayer);
         }
     }

@@ -1,8 +1,12 @@
 package com.bigdad.factionsoffaith;
 
+import com.bigdad.factionsoffaith.data.FaithDataHandler;
 import com.bigdad.factionsoffaith.item.ModItems;
 import com.mojang.logging.LogUtils;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -35,10 +39,19 @@ public class FactionsOfFaith {
     }
 
 
-    @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @Mod.EventBusSubscriber
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
+        }
+        @SubscribeEvent
+        public static void onServerStarting(ServerStartingEvent event) {
+            MinecraftServer server = event.getServer();
+            ServerLevel world = server.getLevel(ServerLevel.OVERWORLD);
+            if (world != null) {
+                FaithDataHandler dataHandler = FaithDataHandler.getData(world);
+                LOGGER.info("Faith Data Loaded on Server Start. {} faith(s) found.", FaithDataHandler.getFaiths().size());
+            }
         }
     }
 }
