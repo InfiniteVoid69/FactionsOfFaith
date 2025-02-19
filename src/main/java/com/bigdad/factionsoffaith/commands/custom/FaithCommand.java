@@ -79,22 +79,6 @@ public class FaithCommand {
                             }
                             return 1;
                         }))
-                .then(Commands.literal("test")
-                    .executes( context -> {
-                        CommandSourceStack source = context.getSource();
-                        ServerPlayer player = source.getPlayerOrException();
-                        int followers = FaithManager.getVillagerCount("test1", player);
-                        System.out.println("test" + followers);
-                        return Command.SINGLE_SUCCESS;
-                    }))
-                .then(Commands.literal("announce")
-                    .then(Commands.argument("message", net.minecraft.commands.arguments.MessageArgument.message())
-                            .executes(context -> {
-                                MinecraftServer server = context.getSource().getServer();
-                                String message = net.minecraft.commands.arguments.MessageArgument.getMessage(context, "message").getString();
-                                ServerMessageHelper.announceToServer(server, "§b[Announcement]§r " + message);
-                                return Command.SINGLE_SUCCESS;
-                            })))
         );
     }
 }
