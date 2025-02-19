@@ -1,14 +1,10 @@
 package com.bigdad.factionsoffaith;
 
-import com.bigdad.factionsoffaith.data.FaithData;
 import com.bigdad.factionsoffaith.data.FaithDataHandler;
-import com.bigdad.factionsoffaith.item.ItemDataHandler;
 import com.bigdad.factionsoffaith.item.ModItems;
 import com.mojang.logging.LogUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -18,12 +14,8 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.server.command.ConfigCommand;
 import org.slf4j.Logger;
 
-import java.util.Map;
-
-import static com.bigdad.factionsoffaith.data.FaithDataHandler.getData;
 import static com.bigdad.factionsoffaith.item.ItemDataHandler.deleteDataIfItemGone;
 
 
@@ -65,16 +57,6 @@ public class FactionsOfFaith {
             if (world != null) {
                 FaithDataHandler dataHandler = FaithDataHandler.getData(world);
                 LOGGER.info("Faith Data Loaded on Server Start. {} faith(s) found.", FaithDataHandler.getFaiths().size());
-            }
-        }
-
-        @SubscribeEvent
-        public static void onServerTick(TickEvent.ServerTickEvent event) {
-            if (event.phase == TickEvent.Phase.END) {
-                ServerLevel world = event.getServer().overworld();
-                for (String name : FaithDataHandler.getFaiths().keySet()) {
-                    deleteDataIfItemGone(world, name);
-                }
             }
         }
     }
