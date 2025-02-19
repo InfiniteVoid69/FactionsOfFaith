@@ -43,11 +43,7 @@ public class FaithDataHandler extends SavedData {
     }
 
     private static final Logger LOGGER = LogManager.getLogger();
-    public static void logMessage() {
-        LOGGER.info("This is an info message.");
-        LOGGER.warn("This is a warning message.");
-        LOGGER.error("This is an error message!");
-    }
+
 
     @Override
     public CompoundTag save(CompoundTag nbt) {

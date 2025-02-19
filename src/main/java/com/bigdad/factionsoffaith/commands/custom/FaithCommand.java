@@ -4,6 +4,7 @@ package com.bigdad.factionsoffaith.commands.custom;
 import com.bigdad.factionsoffaith.data.FaithData;
 import com.bigdad.factionsoffaith.data.FaithDataHandler;
 import com.bigdad.factionsoffaith.data.FaithManager;
+import com.bigdad.factionsoffaith.events.ServerMessageHelper;
 import com.bigdad.factionsoffaith.item.ModItems;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
@@ -11,13 +12,10 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Map;
@@ -85,12 +83,18 @@ public class FaithCommand {
                     .executes( context -> {
                         CommandSourceStack source = context.getSource();
                         ServerPlayer player = source.getPlayerOrException();
-                        FaithDataHandler.logMessage();
                         int followers = FaithManager.getVillagerCount("test1", player);
                         System.out.println("test" + followers);
                         return Command.SINGLE_SUCCESS;
                     }))
-
+                .then(Commands.literal("announce")
+                    .then(Commands.argument("message", net.minecraft.commands.arguments.MessageArgument.message())
+                            .executes(context -> {
+                                MinecraftServer server = context.getSource().getServer();
+                                String message = net.minecraft.commands.arguments.MessageArgument.getMessage(context, "message").getString();
+                                ServerMessageHelper.announceToServer(server, "§b[Announcement]§r " + message);
+                                return Command.SINGLE_SUCCESS;
+                            })))
         );
     }
 }

@@ -37,22 +37,22 @@ public class FaithManager {
         return true;
     }
 
-    public static boolean disbandFaith(String name, ServerPlayer player, ServerLevel world) {
+    public static boolean disbandFaith(String FAITH, ServerPlayer player, ServerLevel world) {
         FaithDataHandler data = getData(world);
-        if (data.getFaith(name) == null) return false;
-        if (!data.getFaith(name).getCreator().equals(player.getUUID())) return false;
-        data.removeFaith(name);
+        if (data.getFaith(FAITH) == null) return false;
+        if (!data.getFaith(FAITH).getCreator().equals(player.getUUID())) return false;
+        data.removeFaith(FAITH);
         player.getPersistentData().remove(FAITH_TAG);
         for (Entity entity : world.getAllEntities()) {
             if (entity instanceof Villager villager) {
                 CompoundTag tag = villager.getPersistentData();
-                if (tag.getString(FAITH_TAG).equals(name)) {
+                if (tag.getString(FAITH_TAG).equals(FAITH)) {
                     tag.remove(FAITH_TAG);
                     tag.remove(FAITH_DEDICATION_TAG);
                 }
             }
         }
-        VILLAGER_FAITHS.entrySet().removeIf(entry -> entry.getValue().equals(name));
+        VILLAGER_FAITHS.entrySet().removeIf(entry -> entry.getValue().equals(FAITH));
         return true;
     }
 
